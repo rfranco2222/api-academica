@@ -1,0 +1,42 @@
+### Archivo para la extensión "REST Client" de VS Code. Haz clic en "Send Request".
+@base = http://localhost:3000/api/v1
+
+### 1) Login como admin (copia el accessToken de la respuesta)
+# @name login
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{ "email": "admin@academico.test", "password": "Admin123!Seguro" }
+
+### Variable con el token de la respuesta anterior
+@token = {{login.response.body.accessToken}}
+
+### 2) Quién soy
+GET {{base}}/auth/me
+Authorization: Bearer {{token}}
+
+### 3) Crear un profesor
+POST {{base}}/profesores
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "email": "jose.ramirez@academico.test",
+  "password": "ClaveSegura2026",
+  "nombres": "José",
+  "apellidos": "Ramírez",
+  "cedula": "001-1234567-8",
+  "telefono": "809-555-0101",
+  "especialidad": "Historia"
+}
+
+### 4) Listar usuarios con filtros
+GET {{base}}/usuarios?rol=estudiante&page=1&limit=10
+Authorization: Bearer {{token}}
+
+### 5) Listar cursos
+GET {{base}}/cursos
+Authorization: Bearer {{token}}
+
+### 6) Renovar el access token (usa la cookie del refresh token)
+POST {{base}}/auth/refresh
